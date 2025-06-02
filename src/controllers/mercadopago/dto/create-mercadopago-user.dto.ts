@@ -12,7 +12,6 @@ export const CreatePaymentDTO = z.object({
     .string()
     .email("Email inválido")
     .transform((email) => email.toLowerCase().trim()),
-  valor: z.number().positive("O valor precisa ser um número positivo"),
   telefone: z
     .string()
     .regex(/^\d{10,15}$/, "O telefone deve ter entre 10 e 15 dígitos"),

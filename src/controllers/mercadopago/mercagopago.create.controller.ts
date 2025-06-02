@@ -6,7 +6,7 @@ import { saveToExcel } from "../../services/save-to-excel";
 export class MercadoPagoCreatePaymentController {
   store = async (req: Request, res: Response) => {
     const result = CreatePaymentDTO.safeParse(req.body);
-    
+
     if (!result.success) {
       const fullErrorMessage = result.error.errors
         .map((error) => error.message)
@@ -24,8 +24,11 @@ export class MercadoPagoCreatePaymentController {
       linkedin,
       empresa,
       cargo,
-      amount, // Capturando o valor do pagamento
+      amount,
     } = result.data;
+
+    let response;
+    let pagamentoCriado = false;
 
     try {
       const client = new MercadoPagoConfig({
@@ -34,17 +37,17 @@ export class MercadoPagoCreatePaymentController {
 
       const preference = new Preference(client);
 
-      const response = await preference.create({
+      response = await preference.create({
         body: {
           items: [
             {
               id: "inscrição",
               title: "Pagamento",
               quantity: 1,
-              unit_price: amount, // Valor recebido do body
+              unit_price: amount,
             },
           ],
-          notification_url: "https://9a91-179-97-232-155.ngrok-free.app/webhook/mercadopago",
+          notification_url: "https://bd79-179-97-232-217.ngrok-free.app/webhook/mercadopago",
           back_urls: {
             success: "https://seusite.com/sucesso",
             failure: "https://seusite.com/erro",
@@ -53,7 +56,8 @@ export class MercadoPagoCreatePaymentController {
         },
       });
 
-      // Dados para a planilha Excel (Removido o amount)
+      pagamentoCriado = true;
+
       const dataToExcel = [
         {
           Nome: name,
@@ -73,6 +77,7 @@ export class MercadoPagoCreatePaymentController {
       return res.status(200).json({ init_point: response.init_point });
     } catch (error) {
       console.error("Erro ao criar pagamento:", error);
+
       return res.status(500).json({ error: "Erro ao criar pagamento" });
     }
   };
