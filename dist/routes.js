@@ -9,6 +9,7 @@ const express_2 = __importDefault(require("express"));
 const mercagopago_create_controller_1 = require("./controllers/mercadopago/mercagopago.create.controller");
 const mercagopago_notification_notification_1 = require("./controllers/mercadopago/mercagopago-notification.notification");
 const mercadoPagoCreatePaymentController = new mercagopago_create_controller_1.MercadoPagoCreatePaymentController();
+const webhookController = new mercagopago_notification_notification_1.MercadoPagoWebhookController();
 exports.router = (0, express_1.Router)();
 exports.router.use(express_2.default.json());
 exports.router.use(express_2.default.urlencoded({ extended: true }));
@@ -17,7 +18,7 @@ exports.router.use((req, res, next) => {
     next();
 });
 exports.router.post("/mercadopago", mercadoPagoCreatePaymentController.store);
-exports.router.post("/webhook/mercagopago", mercagopago_notification_notification_1.MercadoPagoWebhook);
+exports.router.post("/webhook/mercadopago", webhookController.handle);
 exports.router.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });

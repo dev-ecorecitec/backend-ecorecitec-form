@@ -25,6 +25,10 @@ export class MercadoPagoCreatePaymentController {
       empresa,
       cargo,
       amount,
+      participarSelecaoMindset,
+      disponibilidadeHorarioTeste,
+      indicacao,
+      expectativas,
     } = result.data;
 
     let response;
@@ -44,7 +48,7 @@ export class MercadoPagoCreatePaymentController {
               id: "inscrição",
               title: "Pagamento",
               quantity: 1,
-              unit_price: amount,
+              unit_price: amount || 0,
             },
           ],
           notification_url: "https://bd79-179-97-232-217.ngrok-free.app/webhook/mercadopago",
@@ -69,6 +73,10 @@ export class MercadoPagoCreatePaymentController {
           LinkedIn: linkedin || "",
           Empresa: empresa || "",
           Cargo: cargo || "",
+          "Teste gratuito do método de mindset": participarSelecaoMindset,
+          "Disponibilidade de horário para o teste": disponibilidadeHorarioTeste,
+          Indicação: indicacao || "",
+          Expectativas: expectativas || "",
         },
       ];
 
