@@ -23,12 +23,8 @@ export const CreatePeopleSchema = z.object({
     ),
   empresa: z.string().min(1, "Empresa é obrigatória"),
   cargo: z.string().min(1, "Cargo é obrigatório"),
-  participarSelecaoMindset: z.enum(["Sim", "Não"], {
-    errorMap: () => ({ message: "Informe se gostaria de participar da seleção para o teste gratuito do método de mindset." })
-  }),
-  disponibilidadeHorarioTeste: z.enum(["Sim", "Não"], {
-    errorMap: () => ({ message: "Informe se pode disponibilizar um horário de 15 min para fazer o teste." })
-  }),
+  participarSelecaoMindset: z.string().min(1, "Informe se gostaria de participar da seleção para o teste gratuito do método de mindset."),  
+  disponibilidadeHorarioTeste: z.string().min(1, "Informe se pode disponibilizar um horário de 15 min para fazer o teste."),
   indicacao: z.string().optional(),
   expectativas: z.string().optional(),
   participant_type: z.string().min(1, "Tipo de participante é obrigatório")

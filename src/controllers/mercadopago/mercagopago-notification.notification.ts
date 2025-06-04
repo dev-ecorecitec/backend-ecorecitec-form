@@ -25,7 +25,7 @@ export class MercadoPagoWebhookController {
         const metadata = paymentInfo.metadata;
 
         console.log(`Pagamento ${data.id} - Status: ${status} - Email: ${email} - Valor: ${amount}`);
-
+        console.log("Metadata recebido:", metadata);
         if (status === "approved" && email && metadata) {
           console.log("Pagamento aprovado, salvando dados no banco de dados...");
           
@@ -42,8 +42,8 @@ export class MercadoPagoWebhookController {
                 linkedin: metadata.linkedin || "Não informado",
                 empresa: metadata.empresa || "Não informado",
                 cargo: metadata.cargo || "Não informado",
-                participarSelecaoMindset: metadata.participarSelecaoMindset || "Não informado",
-                disponibilidadeHorarioTeste: metadata.disponibilidadeHorarioTeste || "Não informado",
+                participarSelecaoMindset: metadata.participarSelecaoMindset || metadata.participar_selecao_mindset || "Não informado",
+disponibilidadeHorarioTeste: metadata.disponibilidadeHorarioTeste || metadata.disponibilidade_horario_teste || "Não informado",
                 indicacao: metadata.indicacao || "",
                 expectativas: metadata.expectativas || "",
                 participant_type: metadata.participant_type || "PAID"

@@ -54,7 +54,7 @@ export class MercadoPagoCreatePaymentController {
               unit_price: amount || 0,
             },
           ],
-          notification_url: "https://60d8-179-97-232-217.ngrok-free.app/webhook/mercadopago",
+          notification_url: "https://99a8-179-97-232-217.ngrok-free.app/webhook/mercadopago",
           back_urls: {
             success: "https://seusite.com/sucesso",
             failure: "https://seusite.com/erro",
