@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import { CreatePaymentDTO } from "./dto/create-mercadopago-user.dto";
-import { saveToExcel } from "../../services/save-to-excel";
 
 export class MercadoPagoCreatePaymentController {
   store = async (req: Request, res: Response) => {
+    console.log("Recebendo dados do formulário:", req.body);
+    
     const result = CreatePaymentDTO.safeParse(req.body);
 
     if (!result.success) {
       const fullErrorMessage = result.error.errors
         .map((error) => error.message)
         .join(", ");
+      console.error("Erro na validação dos dados:", fullErrorMessage);
       return res.status(400).json({ error: fullErrorMessage });
     }
 
@@ -29,12 +31,13 @@ export class MercadoPagoCreatePaymentController {
       disponibilidadeHorarioTeste,
       indicacao,
       expectativas,
+      participant_type
     } = result.data;
 
     let response;
-    let pagamentoCriado = false;
 
     try {
+      console.log("Iniciando criação do pagamento no Mercado Pago");
       const client = new MercadoPagoConfig({
         accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || "",
       });
@@ -51,41 +54,36 @@ export class MercadoPagoCreatePaymentController {
               unit_price: amount || 0,
             },
           ],
-          notification_url: "https://bd79-179-97-232-217.ngrok-free.app/webhook/mercadopago",
+          notification_url: "https://60d8-179-97-232-217.ngrok-free.app/webhook/mercadopago",
           back_urls: {
             success: "https://seusite.com/sucesso",
             failure: "https://seusite.com/erro",
           },
           auto_return: "approved",
+          metadata: {
+            name,
+            telefone,
+            email,
+            cpf,
+            pais,
+            cidade,
+            linkedin,
+            empresa,
+            cargo,
+            participarSelecaoMindset,
+            disponibilidadeHorarioTeste,
+            participant_type,
+            ...(indicacao && { indicacao }),
+            ...(expectativas && { expectativas }),
+          }
+          
         },
       });
 
-      pagamentoCriado = true;
-
-      const dataToExcel = [
-        {
-          Nome: name,
-          Telefone: telefone,
-          Email: email,
-          CPF: cpf,
-          País: pais || "",
-          Cidade: cidade || "",
-          LinkedIn: linkedin || "",
-          Empresa: empresa || "",
-          Cargo: cargo || "",
-          "Teste gratuito do método de mindset": participarSelecaoMindset,
-          "Disponibilidade de horário para o teste": disponibilidadeHorarioTeste,
-          Indicação: indicacao || "",
-          Expectativas: expectativas || "",
-        },
-      ];
-
-      await saveToExcel(dataToExcel);
-
+      console.log("Pagamento criado com sucesso no Mercado Pago");
       return res.status(200).json({ init_point: response.init_point });
     } catch (error) {
-      console.error("Erro ao criar pagamento:", error);
-
+      console.error("Erro ao processar pagamento:", error);
       return res.status(500).json({ error: "Erro ao criar pagamento" });
     }
   };

@@ -1,10 +1,34 @@
 import { google } from 'googleapis';
 import path from 'path';
 import fs from 'fs';
-import 'dotenv/config';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 const KEYFILEPATH = path.join(process.cwd(), 'service-account.json');
+const FOLDER_ID = '1jVLp66AL3_XyNaIn8Y5dbAzipkB3nLn_';
+
+async function deleteExistingFiles(drive: any) {
+  try {
+    const response = await drive.files.list({
+      q: `'${FOLDER_ID}' in parents`,
+      fields: 'files(id, name)',
+    });
+
+    const files = response.data.files;
+    
+    for (const file of files) {
+      await drive.files.delete({
+        fileId: file.id,
+      });
+      console.log(`Arquivo deletado: ${file.name}`);
+    }
+  } catch (error) {
+    console.error('Erro ao deletar arquivos existentes:', error);
+    throw error;
+  }
+}
 
 export async function uploadToGoogleDrive(filePath: string, fileName: string) {
   try {
@@ -14,9 +38,13 @@ export async function uploadToGoogleDrive(filePath: string, fileName: string) {
     });
 
     const drive = google.drive({ version: 'v3', auth });
+
+    // Primeiro, deleta todos os arquivos existentes
+    await deleteExistingFiles(drive);
+
     const fileMetadata = {
       name: fileName,
-      parents: [process.env.GOOGLE_DRIVE_FOLDER_ID || ''],
+      parents: [FOLDER_ID],
     };
 
     const media = {
