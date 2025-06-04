@@ -62,7 +62,7 @@ export class MercadoPagoWebhookController {
 
             // Configuração do transporter do nodemailer
             const transporter = nodemailer.createTransport({
-              host: process.env.SMTP_HOST,
+              host: process.env.SMTP_SERVER,
               port: Number(process.env.SMTP_PORT) || 587,
               secure: false,
               auth: {
