@@ -60,7 +60,6 @@ export class MercadoPagoWebhookController {
             });
             console.log("Dados salvos com sucesso no banco de dados");
 
-            // Configuração do transporter do nodemailer
             const transporter = nodemailer.createTransport({
               host: process.env.SMTP_SERVER,
               port: Number(process.env.SMTP_PORT) || 587,

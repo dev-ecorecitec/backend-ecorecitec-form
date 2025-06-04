@@ -76,7 +76,6 @@ export class PeopleController {
     }
 
     try {
-      // Verifica se a pessoa existe
       const existingPerson = await prisma.people.findUnique({
         where: { id: Number(id) }
       });
@@ -85,7 +84,6 @@ export class PeopleController {
         return res.status(404).json({ error: "Pessoa não encontrada" });
       }
 
-      // Verifica se o novo email já está em uso por outra pessoa
       if (result.data.email !== existingPerson.email) {
         const emailInUse = await prisma.people.findUnique({
           where: { email: result.data.email }
@@ -112,7 +110,6 @@ export class PeopleController {
     const { id } = req.params;
 
     try {
-      // Verifica se a pessoa existe
       const existingPerson = await prisma.people.findUnique({
         where: { id: Number(id) }
       });
