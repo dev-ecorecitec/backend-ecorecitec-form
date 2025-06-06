@@ -31,7 +31,8 @@ export class MercadoPagoCreatePaymentController {
       disponibilidadeHorarioTeste,
       indicacao,
       expectativas,
-      participant_type
+      participant_type,
+      router,
     } = result.data;
 
     let response;
@@ -75,6 +76,7 @@ export class MercadoPagoCreatePaymentController {
             participant_type,
             ...(indicacao && { indicacao }),
             ...(expectativas && { expectativas }),
+            router,
           }
           
         },

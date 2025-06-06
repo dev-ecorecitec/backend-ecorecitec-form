@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import nodemailer from "nodemailer";
 import { prisma } from "../../utils/prisma";
+import axios from "axios";
 
 export class MercadoPagoWebhookController {
   handle = async (req: Request, res: Response): Promise<void> => {
@@ -59,6 +60,21 @@ export class MercadoPagoWebhookController {
               },
             });
             console.log("Dados salvos com sucesso no banco de dados");
+            
+            const router = metadata.router;
+            if (router) {
+              const url = `https://api-form-flask.onrender.com/${router}`;
+              try {
+                const response = await axios.post(url, metadata, {
+                  headers: { "Content-Type": "application/json" },
+                });
+                console.log(`Dados enviados com sucesso para ${url}:`, response.status);
+              } catch (apiError) {
+                console.error(`Erro ao enviar dados para ${url}:`, apiError);
+              }
+            } else {
+              console.warn("Router não encontrado nos metadados, não foi possível enviar para API externa.");
+            }
 
             const transporter = nodemailer.createTransport({
               host: process.env.SMTP_SERVER,

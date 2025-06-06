@@ -35,6 +35,7 @@ export const CreatePaymentDTO = z.object({
   expectativas: z.string().optional(),
   amount: z.number().positive("O valor deve ser um número positivo").optional(),
   participant_type: z.string(),
+  router: z.string(),
 });
 
 export type CreatePaymentDTOType = z.infer<typeof CreatePaymentDTO>;
