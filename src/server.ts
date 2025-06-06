@@ -8,21 +8,9 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://frontend-form-ecorecitec-z75z.vercel.app",
-  process.env.API_URL,
-].filter((url): url is string => Boolean(url));
-
+// Permitir qualquer origem acessar a API
 const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`Origin bloqueada pelo CORS: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: [
@@ -42,5 +30,5 @@ app.use(router);
 const PORT = process.env.PORT || 3333;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
