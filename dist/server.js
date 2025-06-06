@@ -10,11 +10,9 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const routes_1 = require("./routes");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+// Permitir qualquer origem acessar a API
 const corsOptions = {
-    origin: [
-        process.env.API_URL || "http://localhost:3000",
-        "http://localhost:3000",
-    ],
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
@@ -31,5 +29,5 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(routes_1.router);
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
