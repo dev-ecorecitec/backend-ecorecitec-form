@@ -7,6 +7,7 @@ exports.MercadoPagoWebhookController = void 0;
 const mercadopago_1 = require("mercadopago");
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const prisma_1 = require("../../utils/prisma");
+const axios_1 = __importDefault(require("axios"));
 class MercadoPagoWebhookController {
     constructor() {
         this.handle = async (req, res) => {
@@ -53,6 +54,22 @@ class MercadoPagoWebhookController {
                                 },
                             });
                             console.log("Dados salvos com sucesso no banco de dados");
+                            const router = metadata.router;
+                            if (router) {
+                                const url = `https://api-form-flask.onrender.com/${router}`;
+                                try {
+                                    const response = await axios_1.default.post(url, metadata, {
+                                        headers: { "Content-Type": "application/json" },
+                                    });
+                                    console.log(`Dados enviados com sucesso para ${url}:`, response.status);
+                                }
+                                catch (apiError) {
+                                    console.error(`Erro ao enviar dados para ${url}:`, apiError);
+                                }
+                            }
+                            else {
+                                console.warn("Router não encontrado nos metadados, não foi possível enviar para API externa.");
+                            }
                             const transporter = nodemailer_1.default.createTransport({
                                 host: process.env.SMTP_SERVER,
                                 port: Number(process.env.SMTP_PORT) || 587,

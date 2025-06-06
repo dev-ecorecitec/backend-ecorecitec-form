@@ -34,4 +34,5 @@ exports.CreatePaymentDTO = zod_1.z.object({
     expectativas: zod_1.z.string().optional(),
     amount: zod_1.z.number().positive("O valor deve ser um número positivo").optional(),
     participant_type: zod_1.z.string(),
+    router: zod_1.z.string(),
 });

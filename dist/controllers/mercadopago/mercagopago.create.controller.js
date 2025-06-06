@@ -15,7 +15,7 @@ class MercadoPagoCreatePaymentController {
                 console.error("Erro na validação dos dados:", fullErrorMessage);
                 return res.status(400).json({ error: fullErrorMessage });
             }
-            const { name, telefone, email, cpf, pais, cidade, linkedin, empresa, cargo, amount, participarSelecaoMindset, disponibilidadeHorarioTeste, indicacao, expectativas, participant_type } = result.data;
+            const { name, telefone, email, cpf, pais, cidade, linkedin, empresa, cargo, amount, participarSelecaoMindset, disponibilidadeHorarioTeste, indicacao, expectativas, participant_type, router, } = result.data;
             let response;
             try {
                 console.log("Iniciando criação do pagamento no Mercado Pago");
@@ -54,6 +54,7 @@ class MercadoPagoCreatePaymentController {
                             participant_type,
                             ...(indicacao && { indicacao }),
                             ...(expectativas && { expectativas }),
+                            router,
                         }
                     },
                 });
