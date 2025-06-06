@@ -54,7 +54,7 @@ export class MercadoPagoCreatePaymentController {
               unit_price: amount || 0,
             },
           ],
-          notification_url: "https://e9b3-179-97-232-217.ngrok-free.app/webhook/mercadopago",
+          notification_url: `${process.env.API_URL}/webhook/mercadopago`,
           back_urls: {
             success: "https://eco-recitec.com.br/sucess-payment.html",
             failure: "https://eco-recitec.com.br/error-payment.html",
