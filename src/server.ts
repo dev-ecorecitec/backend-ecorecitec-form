@@ -10,9 +10,10 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    process.env.API_URL || "http://localhost:3000",
     "http://localhost:3000",
-  ],
+    "https://frontend-form-ecorecitec-z75z.vercel.app",
+    process.env.API_URL,
+  ].filter((url): url is string => Boolean(url)),
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: [
