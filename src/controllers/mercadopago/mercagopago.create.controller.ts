@@ -55,7 +55,7 @@ export class MercadoPagoCreatePaymentController {
               unit_price: amount || 0,
             },
           ],
-          notification_url: `${process.env.API_URL}/webhook/mercadopago`,
+          notification_url: `${process.env.RENDER_URL}/webhook/mercadopago`,
           back_urls: {
             success: "https://eco-recitec.com.br/sucess-payment.html",
             failure: "https://eco-recitec.com.br/error-payment.html",
