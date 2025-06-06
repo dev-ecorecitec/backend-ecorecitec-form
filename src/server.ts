@@ -8,12 +8,21 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://frontend-form-ecorecitec-z75z.vercel.app",
+  process.env.API_URL,
+].filter((url): url is string => Boolean(url));
+
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://frontend-form-ecorecitec-z75z.vercel.app",
-    process.env.API_URL,
-  ].filter((url): url is string => Boolean(url)),
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`Origin bloqueada pelo CORS: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: [
