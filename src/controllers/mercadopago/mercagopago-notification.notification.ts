@@ -35,45 +35,48 @@ export class MercadoPagoWebhookController {
           );
 
           try {
-            await prisma.people.create({
-              data: {
-                name: metadata.name,
-                email: metadata.email,
-                telefone: metadata.telefone,
-                cpf: metadata.cpf,
-                pais: metadata.pais || "Brasil",
-                cidade: metadata.cidade || "Não informado",
-                linkedin: metadata.linkedin || "Não informado",
-                empresa: metadata.empresa || "Não informado",
-                cargo: metadata.cargo || "Não informado",
-                participarSelecaoMindset:
-                  metadata.participarSelecaoMindset ||
-                  metadata.participar_selecao_mindset ||
-                  "Não informado",
-                disponibilidadeHorarioTeste:
-                  metadata.disponibilidadeHorarioTeste ||
-                  metadata.disponibilidade_horario_teste ||
-                  "Não informado",
-                indicacao: metadata.indicacao || "",
-                expectativas: metadata.expectativas || "",
-                participant_type: metadata.participant_type || "PAID",
-              },
-            });
-            console.log("Dados salvos com sucesso no banco de dados");
+            // await prisma.people.create({
+            //   data: {
+            //     name: metadata.name,
+            //     email: metadata.email,
+            //     telefone: metadata.telefone,
+            //     cpf: metadata.cpf,
+            //     pais: metadata.pais || "Brasil",
+            //     cidade: metadata.cidade || "Não informado",
+            //     linkedin: metadata.linkedin || "Não informado",
+            //     empresa: metadata.empresa || "Não informado",
+            //     cargo: metadata.cargo || "Não informado",
+            //     participarSelecaoMindset:
+            //       metadata.participarSelecaoMindset ||
+            //       metadata.participar_selecao_mindset ||
+            //       "Não informado",
+            //     disponibilidadeHorarioTeste:
+            //       metadata.disponibilidadeHorarioTeste ||
+            //       metadata.disponibilidade_horario_teste ||
+            //       "Não informado",
+            //     indicacao: metadata.indicacao || "",
+            //     expectativas: metadata.expectativas || "",
+            //     participant_type: metadata.participant_type || "PAID",
+            //   },
+            // });
+            // console.log("Dados salvos com sucesso no banco de dados");
             
             const router = metadata.router;
-            if (router) {
+            if (router && router !== "car") {
+              const { router: _, amount: __, ...metadataSemRouterEAmount } = metadata;
               const url = `https://api-form-flask.onrender.com/${router}`;
               try {
-                const response = await axios.post(url, metadata, {
+                const response = await axios.post(url, metadataSemRouterEAmount, {
                   headers: { "Content-Type": "application/json" },
                 });
                 console.log(`Dados enviados com sucesso para ${url}:`, response.status);
               } catch (apiError) {
                 console.error(`Erro ao enviar dados para ${url}:`, apiError);
               }
-            } else {
+            } else if (!router) {
               console.warn("Router não encontrado nos metadados, não foi possível enviar para API externa.");
+            } else if (router === "car") {
+              console.log("Router é 'car', não será enviado para API externa.");
             }
 
             const transporter = nodemailer.createTransport({
