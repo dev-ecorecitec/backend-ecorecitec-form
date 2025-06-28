@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 - controllers -> onde se se localiza o CRUD de cada etapa da aplicação dos 
 
 - impactos -> CRUD dos impactos
@@ -46,3 +47,6 @@
 
 ## .ENV BACKEND
 está no exemplo .env-example
+=======
+# backend-ecorecitec-form
+>>>>>>> ea98665ac3c4f05340a5f2c64ed0227b8ba30689
