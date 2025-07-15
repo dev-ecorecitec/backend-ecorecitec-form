@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../utils/prisma";
 import dotenv from "dotenv";
 import { CreatePeopleSchema } from "./dto/create-people.dto";
+import { saveToExcel } from "../../services/save-to-excel";
 
 dotenv.config();
 
@@ -26,6 +27,26 @@ export class PeopleController {
       const people = await prisma.people.create({
         data: result.data,
       });
+
+      // Adiciona a data da inscrição do usuario:
+      const excelData = [{
+        Nome: people.name,
+        Telefone: people.telefone,
+        Email: people.email,
+        CPF: people.cpf,
+        País: people.pais,
+        Cidade: people.cidade,
+        LinkedIn: people.linkedin,
+        Empresa: people.empresa,
+        Cargo: people.cargo,
+        "Teste gratuito do método de mindset": people.participarSelecaoMindset,
+        "Disponibilidade de horário para o teste": people.disponibilidadeHorarioTeste,
+        Indicação: people.indicacao || "",
+        Expectativas: people.expectativas || "",
+        "Data de inscrição": new Date().toLocaleString("pt-BR", { timeZone: "America/Bahia" })
+      }];
+
+      await saveToExcel(excelData);
 
       return res.status(201).json(people);
     } catch (error) {

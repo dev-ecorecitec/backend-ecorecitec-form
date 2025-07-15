@@ -57,6 +57,7 @@ export async function saveToExcel(data: any[]) {
         { header: "Disponibilidade de horário para o teste", key: "Disponibilidade de horário para o teste", width: 30 },
         { header: "Indicação", key: "Indicação", width: 20 },
         { header: "Expectativas", key: "Expectativas", width: 30 },
+        { header: "Data de inscrição", key: "Data de inscrição", width: 20 },
       ];
     }
 
